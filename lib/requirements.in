@@ -1,0 +1,3 @@
+idna==2.8
+pika
+aio_pika

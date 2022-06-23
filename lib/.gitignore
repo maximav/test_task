@@ -1,0 +1,17 @@
+.idea
+node_modules/
+__pycache__
+*.pyc
+.env
+.pytest_cache
+.mypy_cache
+_temp
+temp
+.docker-compose.yml
+/env
+build
+dist
+flow-typed
+*.egg-info
+yarn.lock
+package-lock.json
