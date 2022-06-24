@@ -15,7 +15,7 @@ export const useStyles = makeStyles(theme => ({
     }
   },
   icon: {
-    color: theme.palette.common.white,
+    color: theme.palette.secondary.main,
     display: 'flex',
     alignItems: 'center',
     marginRight: theme.spacing(1)
@@ -39,9 +39,9 @@ export const useStyles = makeStyles(theme => ({
   },
   iconItem: {
     width: 18,
-    fill: theme.palette.primary.contrastText + '!important',
+    fill: theme.palette.secondary.main + '!important',
     strokeWidth: '0.2px',
-    stroke: theme.palette.primary.contrastText + '!important'
+    stroke: theme.palette.secondary.main + '!important'
   },
   listItem: {
     minWidth: theme.spacing(5),

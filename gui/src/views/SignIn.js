@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   headerItem: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     padding: `0 0 ${theme.spacing(2)}px 0`
   },
   subHeaderItem: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(0)
     },
     '& label.Mui-focused, label': {
-      color: theme.palette.primary.main,
+      color: theme.palette.secondary.main,
     },
     '& label.MuiInputLabel-shrink': {
       transform: 'translate(14px, -15px) scale(0.75)'
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
         borderColor: theme.palette.grey[500]
       },
       '& input': {
-        color: theme.palette.primary.main
+        color: theme.palette.secondary.main
       }
     }
   },
@@ -70,11 +70,11 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(0),
     '& .MuiCheckbox-colorPrimary': {
       padding: theme.spacing(0, 1, 0, 1),
-      color: `${theme.palette.primary.main}!important`
+      color: `${theme.palette.secondary.main}!important`
     },
     '& .MuiTypography-body1': {
       fontSize: 14,
-      color: `${theme.palette.primary.main}!important`
+      color: `${theme.palette.secondary.main}!important`
     }
   },
   submitRow: {
@@ -150,7 +150,7 @@ const SignIn = () => {
                   <div className={classes.submitRow}>
                     <Button
                       className={classes.submit}
-                      color="primary"
+                      color="secondary"
                       disabled={isFetching}
                       fullWidth
                       size="large"

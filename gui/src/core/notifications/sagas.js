@@ -1,4 +1,9 @@
 import {delay, takeLatest, takeLeading} from '@redux-saga/core/effects';
+import qs from 'query-string';
+import {put} from 'redux-saga/effects';
+import {history} from '../../commons';
+import {pageSizes} from '../../const';
+import {fetchFiles} from '../files/actions';
 import * as CONSTS from './consts';
 import connect from './connect';
 
@@ -15,9 +20,17 @@ const runConnect = function*({ payload }) {
   if (payload <= MAX_RECONNECT_COUNT) connect(payload);
 };
 
+const UPDATE_FILES = 'update_files';
 
-const receiveMessage = function({ payload }) {
+const receiveMessage = function*({ payload }) {
   console.log('payload', payload)
+  const action = payload.payload.action;
+  if (action && action === UPDATE_FILES) {
+    const query = qs.parse(history.location.search);
+    const page = parseInt(query.page || 1);
+    const pageSize = parseInt(query.pageSize || pageSizes[0]);
+    yield put(fetchFiles(page, pageSize));
+  }
 
 };
 

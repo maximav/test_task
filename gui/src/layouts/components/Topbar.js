@@ -54,12 +54,12 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     width: 22,
-    stroke: theme.palette.primary.main,
-    fill: theme.palette.primary.main,
+    stroke: theme.palette.secondary.main,
+    fill: theme.palette.secondary.main,
     strokeWidth: '0.2px'
   },
   header: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     textTransform: 'uppercase'
   }
 }));

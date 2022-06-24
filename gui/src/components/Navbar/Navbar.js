@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'none'
   },
   title: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.main,
     textTransform: 'uppercase',
     '&:hover': {
       cursor: 'pointer'
@@ -47,7 +47,7 @@ const Navbar = () => {
         <Typography
           className={classes.title}
           noWrap onClick={handleClickLogo} variant="h6">
-            Applications
+            Application
         </Typography>
         {loc.SignIn() !== loc.current() ? !user ?
           <Button

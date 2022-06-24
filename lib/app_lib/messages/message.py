@@ -1,7 +1,9 @@
 from collections import namedtuple
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, is_dataclass, dataclass
 from json import dumps
 from typing import TYPE_CHECKING, Optional
+
+from app_lib.classes.base import Base
 
 if TYPE_CHECKING:
     from dataclasses import dataclass  # NOQA
@@ -14,7 +16,8 @@ META_FIELD = '_meta'
 MetaMessage = namedtuple('MetaMessage', [TYPE_FIELD], defaults=[None])
 
 __all__ = [
-    'Message'
+    'Message',
+    'RenameFileRequest'
 ]
 
 
@@ -45,3 +48,8 @@ class Message:
     def pop_meta(data: dict) -> MetaMessage:
         meta = data.pop(META_FIELD)
         return MetaMessage(**meta)
+
+
+@dataclass
+class RenameFileRequest(Base):
+    id: int

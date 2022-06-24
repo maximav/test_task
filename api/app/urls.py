@@ -23,7 +23,7 @@ from drf_yasg.views import get_schema_view
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-
+from tasks.views import FileModelViewSet
 from users.views import UserViewSet, MeViewSet, LoginView, LogoutView, NotificationView
 
 
@@ -31,12 +31,12 @@ schema_view = get_schema_view(
     openapi.Info(title="App API", default_version='v1',),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    # TODO remove hardcode. Get swagger url from environment
     url=settings.APP_API_HOST
 )
 
 router = routers.SimpleRouter()
 router.register(r'users', UserViewSet)
+router.register(r'files', FileModelViewSet)
 
 urlpatterns = []
 

@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     height: css.chevronSize,
     bottom: css.topBarHeight - (css.chevronSize / 2),
     left: css.drawerWidth - (css.chevronSize / 2),
-    border: `2px solid ${theme.palette.info.main}`,
+    border: `2px solid ${theme.palette.secondary.main}`,
     zIndex: theme.zIndex.drawer + 3,
     borderRadius: css.chevronSize,
     backgroundColor: `${theme.palette.secondary.contrastText}!important`,
@@ -72,9 +72,14 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 2, 1, 2.5)
   },
   logo: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.main,
     textTransform: 'uppercase',
     fontSize: '2rem'
+  },
+  icon: {
+    fill: theme.palette.secondary.main + '!important',
+    strokeWidth: '0.2px',
+    stroke: theme.palette.secondary.main + '!important',
   }
 }));
 
@@ -102,7 +107,7 @@ const Sidebar = props => {
       <List>
         <ListItem className={classes.logoListItem}>
           <ListItemIcon>
-            <div className={classes.logo}>{open ? 'Applications': 'A'}</div>
+            <div className={classes.logo}>{open ? 'Application': 'A'}</div>
           </ListItemIcon>
         </ListItem>
       </List>
@@ -113,7 +118,7 @@ const Sidebar = props => {
           })}
           onClick={toggleSidebar}
         >
-          <ChevronLeftIcon />
+          <ChevronLeftIcon className={classes.icon}/>
         </div>
 
       </div>

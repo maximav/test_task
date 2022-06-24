@@ -9,8 +9,3 @@ export const fetchFiles = (page, pageSize) => ({
   type: CONSTS.FETCH,
   payload: { page, pageSize }
 });
-
-export const updateList = items => ({
-  type: CONSTS.LIST,
-  payload: [...items]
-});

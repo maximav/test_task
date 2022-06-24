@@ -81,15 +81,6 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const AVAILABLE_EXTENSIONS = ['csv'];
-
-const checkExtension = filename => {
-  if (filename !== '') {
-    const items = filename.split('.');
-    return !(items.length > 1 && AVAILABLE_EXTENSIONS.indexOf(items[1]) !== -1);
-  }
-};
-
 const UploadFiles = (
   {
     disabled,
@@ -99,7 +90,7 @@ const UploadFiles = (
   const submit = useAction(uploadFile);
   const { uploading } = useSelector(uploadSelector);
   const [open, toggleOpen] = useModal();
-  const [reelsName, setReelsName] = useState('');
+  const [newFileName, setNewFileName] = useState('');
   const [fileName, setFileName] = useState('');
   const classes = useStyles();
   const fileFormRef = useRef();
@@ -110,11 +101,11 @@ const UploadFiles = (
     const newUploadName =
       current && current.files.length ? current.files[0].name : '';
     setFileName(newUploadName);
-    setReelsName(newUploadName);
+    setNewFileName(newUploadName);
   };
 
   const onChangeFileName = ({ target }) => {
-    return setReelsName(target.value || '');
+    return setNewFileName(target.value || '');
   };
 
   const handleClickOpen = () => {
@@ -123,14 +114,13 @@ const UploadFiles = (
 
   const handleClose = () => {
     toggleOpen();
-    setReelsName('');
+    setNewFileName('');
     setFileName('');
   };
 
   const startUpload = () => {
-    submit(fileFormRef.current.files[0], reelsName);
+    submit(fileFormRef.current.files[0], newFileName);
   };
-  const error = checkExtension(fileName);
 
   const toolTip = (
     <Tooltip title={'Загрузить катушки'}>
@@ -138,7 +128,6 @@ const UploadFiles = (
         disabled={disabled}
         onClick={handleClickOpen}
       >
-
         <CloudUploadIcon color="primary" />
       </IconButton>
     </Tooltip>
@@ -151,9 +140,8 @@ const UploadFiles = (
       disableElevation
       onClick={handleClickOpen}
       startIcon={<CloudUploadIcon className={classes.icon} />}
-
     >
-      Загрузить катушки
+      Загрузить файл
     </Button>
   );
 
@@ -190,7 +178,7 @@ const UploadFiles = (
             >
               <FormControl
                 className={classes.fullWidth}
-                error={!reelsName && !!fileName}
+                error={!newFileName && !!fileName}
               >
                 <InputLabel
                   htmlFor="file_name_"
@@ -220,13 +208,12 @@ const UploadFiles = (
                       </label>
                     </InputAdornment>
                   }
-                  error={error}
-                  id="matrix_name"
+                  id="file_name_"
                   onChange={onChangeFileName}
                   type="text"
-                  value={reelsName}
+                  value={newFileName}
                 />
-                <FormHelperText error={error}>
+                <FormHelperText>
                   {fileName && ` ${t('Загрузить файл')}: ${fileName}`}.
                 </FormHelperText>
                 <div
@@ -250,8 +237,8 @@ const UploadFiles = (
             Отмена
           </Button>
           <Button
-            color="primary"
-            disabled={uploading || !reelsName || !fileName || error}
+            color="secondary"
+            disabled={uploading || !newFileName || !fileName}
             onClick={startUpload}
           >
             Создать
