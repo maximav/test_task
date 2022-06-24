@@ -1,2 +1,0 @@
-const DOMAIN = 'DASHBOARD';
-export const DASHBOARD_ACTION = `${DOMAIN}@START`;
