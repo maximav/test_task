@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-j6_+)%%j(xo)p$blm466_=-h=fie0a#zqh$o!srzy%ip-35%p=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -124,8 +124,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -142,11 +140,13 @@ REST_FRAMEWORK = {
 
 APP_API_FILES_DIR = os.environ.get('APP_API_FILES_DIR', BASE_DIR)
 
-MEDIA_ROOT = os.path.join(APP_API_FILES_DIR, 'media')
+MEDIA_ROOT = os.path.join(APP_API_FILES_DIR, 'files', 'media')
 
 MEDIA_URL = '/backend/media/'
 
-STATIC_ROOT = os.path.join(APP_API_FILES_DIR, 'static')
+STATIC_ROOT = os.path.join(APP_API_FILES_DIR, 'files', 'static')
+STATIC_URL = '/backend/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 APP_SERVICE_URL = os.environ.get('APP_SERVICE_URL', None)
 APP_SERVICE_CONNECTION = os.environ.get(

@@ -7,20 +7,11 @@ server {
     listen 80;
     client_max_body_size 320M;
 
-    location /sockjs-node {
-        proxy_pass $GUI_LOC;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_read_timeout 600s;
+    location / {
+       proxy_pass $API_LOC;
+       proxy_set_header Host $host;
+       proxy_redirect off;
     }
-
-    location /internal/backend/media {
-        internal;
-        expires -1;
-        alias /var/www/backend/media;
-    }
-
     location /ws {
         internal;
         proxy_pass $WS_LOC;
@@ -29,13 +20,4 @@ server {
         proxy_set_header Connection $connection_upgrade;
         proxy_read_timeout 600s;
     }
-
-    location ~ ^/(api|admin|swagger|redoc|backend) {
-       proxy_pass $API_LOC;
-    }
-
-    location / {
-       proxy_pass $GUI_LOC;
-    }
-
 }

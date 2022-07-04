@@ -1,0 +1,109 @@
+version: "3.8"
+
+services:
+  app_base:
+    build:
+      context: ./lib
+      dockerfile: ./Dockerfile
+    image: app/app_base
+
+    container_name: app_base
+
+  db:
+    image: postgres:12-alpine
+    container_name: db
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+  amqp:
+    image: rabbitmq:3.8.2-management
+    container_name: app_amqp
+    depends_on:
+      - db
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  notifications:
+    build:
+      context: ./notifications
+      dockerfile: ./Dockerfile
+    image: app/app_notifications
+    container_name: app_notifications
+    command: bash -c "python3 main.py"
+    restart: always
+
+    environment:
+      APP_SERVICE_URL: amqp://guest:guest@amqp:5672/
+      APP_NOTIFICATIONS_PORT: 8080
+
+  api:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    image: app/app_api
+    container_name: app_api
+
+    command: bash -c "python3 main.py"
+    restart: on-failure
+    depends_on:
+      - amqp
+      - db
+    environment:
+      APP_API_PORT: 8000
+      APP_API_HOST: http://gui
+      APP_SERVICE_URL: amqp://guest:guest@amqp:5672/
+      DJANGO_SETTINGS_MODULE: app.local
+
+  controller:
+    image: app/app_api
+    container_name: api_controller
+    command: bash -c "python3 manage.py controller"
+    restart: on-failure
+    depends_on:
+      - amqp
+      - db
+      - api
+    environment:
+      APP_API_PORT: 8000
+      APP_API_HOST: http://gui
+      APP_SERVICE_URL: amqp://guest:guest@amqp:5672/
+      DJANGO_SETTINGS_MODULE: app.local
+
+  gui:
+    build:
+      context: ./gui
+      dockerfile: ./Dockerfile
+    image: app/app_gui
+    restart: on-failure
+    depends_on:
+      - amqp
+      - api
+      - notifications
+    volumes:
+      - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+
+volumes:
+  db: {}
+  node_modules: {}
+  media: {}
