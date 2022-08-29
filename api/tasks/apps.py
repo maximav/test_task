@@ -1,3 +1,4 @@
+import app_lib
 from app_lib.services.controller.config import controller_config
 from app_lib.services.main import Service
 from app_lib.services.notification_service import NotificationService
@@ -15,7 +16,8 @@ class TasksConfig(AppConfig):
     @property
     def connection(self) -> 'SyncConnection':
         if not self._connection:
-            connection = SyncConnection(settings.APP_SERVICE_URL)
+            connection_class = getattr(app_lib, settings.APP_SERVICE_CONNECTION)
+            connection = connection_class(settings.APP_SERVICE_URL)
             connection.connect()
             self._connection = connection
         return self._connection

@@ -42,7 +42,7 @@ class UserSerializer(ModelSerializer):
             'email'
         )
         read_only_fields = (
-            'id'
+            'id',
         )
         extra_kwargs = {'password': {'write_only': True}}
 

@@ -21,3 +21,4 @@ flow-typed
 yarn.lock
 api/media/*
 package-lock.json
+api/files/*

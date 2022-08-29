@@ -1,13 +1,18 @@
+import json
 from abc import abstractmethod
 from asyncio import Event
+from collections import defaultdict
+from queue import Queue
 from typing import (
     TYPE_CHECKING,
     Any,
     Awaitable,
     Callable,
     Dict,
+    List,
     NoReturn,
     Optional,
+    Tuple,
     Union,
 )
 
@@ -18,17 +23,17 @@ from app_lib.log import get_logger
 if TYPE_CHECKING:
     import asyncio  # NOQA
     from pika.spec import Basic, BasicProperties  # NOQA
-    from app_lib.messages.message import Message
+    from messages import Message
     from pika.channel import Channel
     from aio_pika import (  # NOQA
         Exchange as AioExchange,
         RobustConnection,
         IncomingMessage,
     )
-    from app_lib.classes.base import QueueParams, ExchangeParams
+    from app_lib.classes import QueueParams, ExchangeParams
 
 
-__all__ = ['AsyncConnection', 'SyncConnection']
+__all__ = ['AsyncConnection', 'SyncConnection', 'QueueConnection']
 
 
 logger = get_logger(__name__)
@@ -216,9 +221,6 @@ class SyncConnection(BaseConnection):
                 callback(body, message_ack)
             except Exception as e:
                 logger.exception('Some thing wrong in consuming: %s', e)
-            """finally:
-                # TODO: не знаем как обрабатывать будем просто делать ack
-                channel.basic_ack(delivery_tag=method_frame.delivery_tag)"""
 
         while True:
             logger.debug('Try to connect')
@@ -273,4 +275,52 @@ class SyncConnection(BaseConnection):
         )
 
 
-Connections = Union[AsyncConnection, SyncConnection]
+class QueueConnection(BaseConnection):
+    """This class using only for test"""
+
+    _exchanges: Dict[Tuple[str, str], List[Queue]]
+    _queues: Dict[str, Queue]
+
+    def __init__(self, url: Optional[str] = None):
+        super().__init__(url)
+        self._exchanges = defaultdict(list)
+        self._queues = defaultdict(Queue)
+
+    def connect(self) -> NoReturn:
+        ...
+
+    def send(self, msg: 'Message') -> NoReturn:
+        for queue in self._exchanges[(msg.exchange, msg.routing_key)]:
+            queue.put_nowait(msg.string())
+
+    def consuming(
+        self, queue_params: 'QueueParams', callback: Callable[[Any], Any]
+    ) -> Callable:
+        queue = self._queues[queue_params.name]
+
+        def message_ack():
+            ...
+
+        def _():
+            string = queue.get_nowait()
+            data = json.loads(string)
+            callback(string.encode(), message_ack)
+            return data
+
+        return _
+
+    def create_queue(
+        self,
+        queue_params: 'QueueParams',
+        exchange_params: 'ExchangeParams',
+        routing_key: str = '',
+    ):
+        q = Queue()
+        queue_name = queue_params.name
+        exchange_name = exchange_params.name
+        self._exchanges[(exchange_name, routing_key)].append(q)
+        self._queues[queue_name] = q
+
+
+Connections = Union[AsyncConnection, SyncConnection, QueueConnection]
+

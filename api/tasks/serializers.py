@@ -11,7 +11,7 @@ class FileCreateSerializer(ModelSerializer):
 
     class Meta:
         model = File
-        fields = ('file', 'name')
+        fields = ('id', 'file', 'name')
         read_only_fields = ('id',)
 
     def create(self, validated_data: Any) -> 'File':

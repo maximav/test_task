@@ -13,7 +13,7 @@ def user_directory_path(instance: 'File', filename: str):
 
 class File(models.Model):
     name = models.CharField(max_length=1024, null=True, blank=True)
-    extension = models.CharField(max_length=64)
+    extension = models.CharField(max_length=64, null=True, blank=True)
     file = models.FileField(upload_to=user_directory_path)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
